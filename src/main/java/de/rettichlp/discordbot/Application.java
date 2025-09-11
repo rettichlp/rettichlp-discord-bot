@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.getenv;
@@ -20,7 +21,7 @@ import static org.springframework.boot.SpringApplication.run;
 @SpringBootApplication
 public class Application {
 
-    public static JDA BOT;
+    public static JDA discordBot;
     public static DiscordBotProperties discordBotProperties;
 
     public static void main(String[] args) {
@@ -35,7 +36,7 @@ public class Application {
     }
 
     private static void startDiscordBot() {
-        BOT = JDABuilder
+        discordBot = JDABuilder
                 .createDefault(discordBotProperties.getToken())
                 .disableCache(MEMBER_OVERRIDES) // Disable parts of the cache
                 .setBulkDeleteSplittingEnabled(false) // Enable the bulk delete event
