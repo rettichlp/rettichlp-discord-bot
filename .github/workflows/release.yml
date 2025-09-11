@@ -10,17 +10,17 @@ on:
 
 run-name: Create release v${{ inputs.version }}
 
-permissions:
-  contents: write
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   release:
 
-    name: 🎉 Release
+    name: 🎉 Release Discord Bot
     runs-on: ubuntu-latest
 
     steps:
@@ -35,8 +35,6 @@ jobs:
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
       - name: Update project version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mvn versions:set -DnewVersion=${{ inputs.version }}
 
       - name: Commit and merge develop branch to main
