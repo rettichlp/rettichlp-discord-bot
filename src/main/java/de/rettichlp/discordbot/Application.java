@@ -7,8 +7,9 @@ import net.dv8tion.jda.api.JDABuilder;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import static java.lang.Runtime.getRuntime;
 import static java.lang.System.currentTimeMillis;
-import static java.lang.System.getenv;
+import static java.util.Optional.ofNullable;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MEMBERS;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MESSAGES;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_VOICE_STATES;
@@ -32,6 +33,9 @@ public class Application {
         long discordBotStartTime = currentTimeMillis();
         log.info("Discord bot starting");
         startDiscordBot();
+
+        getRuntime().addShutdownHook(new Thread(() -> ofNullable(discordBot).ifPresent(JDA::shutdown)));
+
         log.info("Discord bot started in {}ms", currentTimeMillis() - discordBotStartTime);
     }
 
