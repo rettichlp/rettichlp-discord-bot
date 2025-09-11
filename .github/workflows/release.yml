@@ -62,6 +62,29 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
+      - name: Upload application via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: rettichlp.de
+          username: discord-bot
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          source: "target/rettichlp-discord-bot.jar"
+          target: "/home/discord-bot/data"
+          timeout: 120s
+          strip_components: 1
+
+      - name: Restart application
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: rettichlp.de
+          username: discord-bot
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/discord-bot/data
+            docker compose up -d --build
+
       - name: Create release notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
