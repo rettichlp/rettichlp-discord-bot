@@ -6,6 +6,8 @@ on:
   push:
     branches: [ "develop" ]
 
+run-name: Build+${{ github.run_number }} ${{ github.ref_name }}/${{ github.sha }}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -13,7 +15,7 @@ concurrency:
 jobs:
   build:
 
-    name: 🏗️ Build
+    name: 🏗️ Build Discord Bot
     runs-on: ubuntu-latest
 
     steps:
