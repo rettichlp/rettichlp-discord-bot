@@ -55,6 +55,12 @@ jobs:
           java-version: '23'
           cache: maven
 
+      - name: Set application properties
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        run: |
+          echo "discord.bot.token=$DISCORD_BOT_TOKEN" >> src/main/resources/application.properties
+
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 

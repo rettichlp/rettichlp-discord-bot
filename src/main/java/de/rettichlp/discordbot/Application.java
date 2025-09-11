@@ -1,5 +1,6 @@
 package de.rettichlp.discordbot;
 
+import de.rettichlp.discordbot.common.configuration.DiscordBotProperties;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -20,9 +21,12 @@ import static org.springframework.boot.SpringApplication.run;
 public class Application {
 
     public static JDA BOT;
+    public static DiscordBotProperties discordBotProperties;
 
     public static void main(String[] args) {
-        run(Application.class, args);
+        ConfigurableApplicationContext context = run(Application.class, args);
+
+        discordBotProperties = context.getBean(DiscordBotProperties.class);
 
         long discordBotStartTime = currentTimeMillis();
         log.info("Discord bot starting");
@@ -32,7 +36,7 @@ public class Application {
 
     private static void startDiscordBot() {
         BOT = JDABuilder
-                .createDefault("DISCORD_BOT_TOKEN")
+                .createDefault(discordBotProperties.getToken())
                 .disableCache(MEMBER_OVERRIDES) // Disable parts of the cache
                 .setBulkDeleteSplittingEnabled(false) // Enable the bulk delete event
                 .setCompression(NONE) // Disable compression (not recommended)
