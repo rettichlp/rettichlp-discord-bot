@@ -11,6 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import static java.lang.Runtime.getRuntime;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Optional.ofNullable;
+import static net.dv8tion.jda.api.interactions.commands.build.Commands.slash;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MEMBERS;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MESSAGES;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_VOICE_STATES;
@@ -26,7 +27,7 @@ public class Application {
     public static JDA discordBot;
     public static DiscordBotProperties discordBotProperties;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext context = run(Application.class, args);
 
         discordBotProperties = context.getBean(DiscordBotProperties.class);
@@ -40,7 +41,7 @@ public class Application {
         log.info("Discord bot started in {}ms", currentTimeMillis() - discordBotStartTime);
     }
 
-    private static void startDiscordBot() {
+    private static void startDiscordBot() throws InterruptedException {
         discordBot = JDABuilder
                 .createDefault(discordBotProperties.getToken())
                 .disableCache(MEMBER_OVERRIDES) // Disable parts of the cache
@@ -50,9 +51,14 @@ public class Application {
                 .enableIntents(GUILD_MEMBERS)
                 .enableIntents(GUILD_MESSAGES)
                 .enableIntents(GUILD_VOICE_STATES)
-                .build();
+                .build().awaitReady();
 
         Registry registry = new Registry();
+        registry.registerCommands();
         registry.registerListeners();
+
+        discordBot.getGuilds().forEach(guild -> guild.updateCommands().addCommands(
+                slash("version", "Zeigt die aktuelle Version des Discord Bots an")
+        ).queue());
     }
 }

@@ -17,15 +17,56 @@ import static java.lang.Class.forName;
 @Log4j2
 public class Registry {
 
-    private static final ClassPathScanningCandidateComponentProvider SCANNER = new ClassPathScanningCandidateComponentProvider(false);
+    private final ClassPathScanningCandidateComponentProvider scanner;
 
-    public void registerListeners() {
-        SCANNER.addIncludeFilter(new AnnotationTypeFilter(EventListener.class));
+    public Registry() {
+        this.scanner = new ClassPathScanningCandidateComponentProvider(false);
+        this.scanner.addIncludeFilter(new AnnotationTypeFilter(Command.class));
+        this.scanner.addIncludeFilter(new AnnotationTypeFilter(EventListener.class));
+    }
 
+    public void registerCommands() {
         AtomicInteger successfulRegistrations = new AtomicInteger();
         AtomicInteger skippedRegistrations = new AtomicInteger();
 
-        List<String> listenerClassNames = SCANNER.findCandidateComponents("de.rettichlp.discordbot").stream()
+        List<String> commandClassNames = this.scanner.findCandidateComponents("de.rettichlp.discordbot.commands").stream()
+                .map(BeanDefinition::getBeanClassName)
+                .toList();
+
+        commandClassNames.stream()
+                .map(className -> {
+                    try {
+                        return forName(className);
+                    } catch (ClassNotFoundException e) {
+                        log.error("Failed to load command class: {}", className, e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .forEach(commandClass -> {
+                    Command annotation = commandClass.getAnnotation(Command.class);
+                    if (annotation.skipped()) {
+                        skippedRegistrations.getAndIncrement();
+                        return;
+                    }
+
+                    try {
+                        CommandBase commandInstance = (CommandBase) commandClass.getConstructor(String.class).newInstance(annotation.label());
+                        discordBot.addEventListener(commandInstance);
+                        successfulRegistrations.getAndIncrement();
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                        log.error("Failed to register command: {}", commandClass.getName(), e);
+                    }
+                });
+
+        log.info("Registered {}/{} commands ({} skipped)", successfulRegistrations.get(), commandClassNames.size(), skippedRegistrations.get());
+    }
+
+    public void registerListeners() {
+        AtomicInteger successfulRegistrations = new AtomicInteger();
+        AtomicInteger skippedRegistrations = new AtomicInteger();
+
+        List<String> listenerClassNames = this.scanner.findCandidateComponents("de.rettichlp.discordbot.listeners").stream()
                 .map(BeanDefinition::getBeanClassName)
                 .toList();
 
