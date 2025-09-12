@@ -14,6 +14,12 @@ public class Registry {
     public void registerListeners() {
         getAnnotated(EventListener.class).forEach(listenerClass -> {
             try {
+                EventListener annotation = listenerClass.getAnnotation(EventListener.class);
+                if (annotation.skipped()) {
+                    skippedRegistrations.getAndIncrement();
+                    return;
+                }
+
                 ListenerAdapter listenerInstance = (ListenerAdapter) listenerClass.getConstructor().newInstance();
                 discordBot.addEventListener(listenerInstance);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
