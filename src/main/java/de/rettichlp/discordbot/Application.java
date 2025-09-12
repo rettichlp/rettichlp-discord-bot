@@ -27,7 +27,7 @@ public class Application {
     public static JDA discordBot;
     public static DiscordBotProperties discordBotProperties;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext context = run(Application.class, args);
 
         discordBotProperties = context.getBean(DiscordBotProperties.class);
@@ -41,7 +41,7 @@ public class Application {
         log.info("Discord bot started in {}ms", currentTimeMillis() - discordBotStartTime);
     }
 
-    private static void startDiscordBot() {
+    private static void startDiscordBot() throws InterruptedException {
         discordBot = JDABuilder
                 .createDefault(discordBotProperties.getToken())
                 .disableCache(MEMBER_OVERRIDES) // Disable parts of the cache
@@ -51,7 +51,7 @@ public class Application {
                 .enableIntents(GUILD_MEMBERS)
                 .enableIntents(GUILD_MESSAGES)
                 .enableIntents(GUILD_VOICE_STATES)
-                .build();
+                .build().awaitReady();
 
         Registry registry = new Registry();
         registry.registerCommands();
