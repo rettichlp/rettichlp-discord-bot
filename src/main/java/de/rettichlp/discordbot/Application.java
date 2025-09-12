@@ -54,6 +54,7 @@ public class Application {
                 .build();
 
         Registry registry = new Registry();
+        registry.registerCommands();
         registry.registerListeners();
 
         discordBot.getGuilds().forEach(guild -> guild.updateCommands().addCommands(
