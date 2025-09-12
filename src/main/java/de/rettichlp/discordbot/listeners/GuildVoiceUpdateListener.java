@@ -1,5 +1,6 @@
 package de.rettichlp.discordbot.listeners;
 
+import de.rettichlp.discordbot.common.registry.EventListener;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
@@ -19,6 +20,7 @@ import static net.dv8tion.jda.api.Permission.VIEW_CHANNEL;
 import static net.dv8tion.jda.api.Permission.VOICE_CONNECT;
 import static net.dv8tion.jda.api.Permission.VOICE_MOVE_OTHERS;
 
+@EventListener
 public class GuildVoiceUpdateListener extends ListenerAdapter {
 
     private static final String TEMPORARY_VOICE_CHANNEL_CATEGORY_ID = "1415968694743597119";
