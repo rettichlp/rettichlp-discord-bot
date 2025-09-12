@@ -1,0 +1,67 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to be deployed (e.g. develop)'
+        required: true
+
+run-name: Deploy+${{ github.run_number }} ${{ github.ref_name }}/${{ github.sha }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+
+    name: 🔨 Deploy Discord Bot
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Update project version
+        run: mvn versions:set -DnewVersion="Build+${{ github.run_number }} ${{ github.ref_name }}/${{ github.sha }}"
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '23'
+          cache: maven
+
+      - name: Set application properties
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        run: |
+          echo "discord.bot.token=$DISCORD_BOT_TOKEN" >> src/main/resources/application.properties
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Upload application via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: rettichlp.de
+          username: discord-bot
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          source: "target/rettichlp-discord-bot.jar"
+          target: "/home/discord-bot/data"
+          timeout: 120s
+          strip_components: 1
+
+      - name: Restart application
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: rettichlp.de
+          username: discord-bot
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/discord-bot/data
+            docker compose up -d --build
