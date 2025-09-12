@@ -1,6 +1,7 @@
 package de.rettichlp.discordbot;
 
 import de.rettichlp.discordbot.common.configuration.DiscordBotProperties;
+import de.rettichlp.discordbot.listeners.GuildMessageListener;
 import de.rettichlp.discordbot.listeners.GuildVoiceUpdateListener;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.JDA;
@@ -51,6 +52,7 @@ public class Application {
                 .enableIntents(GUILD_MESSAGES)
                 .enableIntents(GUILD_VOICE_STATES)
                 .addEventListeners(
+                        new GuildMessageListener(),
                         new GuildVoiceUpdateListener()
                 )
                 .build();
