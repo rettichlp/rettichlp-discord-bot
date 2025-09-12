@@ -11,6 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import static java.lang.Runtime.getRuntime;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Optional.ofNullable;
+import static net.dv8tion.jda.api.interactions.commands.build.Commands.slash;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MEMBERS;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MESSAGES;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_VOICE_STATES;
@@ -54,5 +55,9 @@ public class Application {
 
         Registry registry = new Registry();
         registry.registerListeners();
+
+        discordBot.getGuilds().forEach(guild -> guild.updateCommands().addCommands(
+                slash("version", "Zeigt die aktuelle Version des Discord Bots an")
+        ).queue());
     }
 }
