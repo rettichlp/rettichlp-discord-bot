@@ -1,6 +1,7 @@
 package de.rettichlp.discordbot;
 
 import de.rettichlp.discordbot.common.configuration.DiscordBotProperties;
+import de.rettichlp.discordbot.common.registry.Registry;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -50,5 +51,8 @@ public class Application {
                 .enableIntents(GUILD_MESSAGES)
                 .enableIntents(GUILD_VOICE_STATES)
                 .build();
+
+        Registry registry = new Registry();
+        registry.registerListeners();
     }
 }
