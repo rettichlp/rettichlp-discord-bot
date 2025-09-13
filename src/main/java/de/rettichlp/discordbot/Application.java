@@ -56,6 +56,7 @@ public class Application {
         Registry registry = new Registry();
         registry.registerCommands();
         registry.registerListeners();
+        registry.registerButtons();
 
         discordBot.getGuilds().forEach(guild -> guild.updateCommands().addCommands(
                 slash("version", "Zeigt die aktuelle Version des Discord Bots an")
