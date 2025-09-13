@@ -28,7 +28,7 @@ jobs:
         run: mvn versions:set -DnewVersion="Build+${{ github.run_number }} ${{ github.ref_name }}/${{ github.sha }}"
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '23'
