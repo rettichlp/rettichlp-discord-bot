@@ -5,12 +5,15 @@ import de.rettichlp.discordbot.common.registry.Registry;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import static java.lang.Runtime.getRuntime;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Optional.ofNullable;
+import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
+import static net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions.enabledFor;
 import static net.dv8tion.jda.api.interactions.commands.build.Commands.slash;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MEMBERS;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MESSAGES;
@@ -56,8 +59,12 @@ public class Application {
         Registry registry = new Registry();
         registry.registerCommands();
         registry.registerListeners();
+        registry.registerButtons();
 
         discordBot.getGuilds().forEach(guild -> guild.updateCommands().addCommands(
+                slash("nachricht", "Nachrichten Vorlagen")
+                        .addSubcommands(new SubcommandData("ticket", "Nachrichten Vorlage für Tickets"))
+                        .setDefaultPermissions(enabledFor(ADMINISTRATOR)),
                 slash("version", "Zeigt die aktuelle Version des Discord Bots an")
         ).queue());
     }

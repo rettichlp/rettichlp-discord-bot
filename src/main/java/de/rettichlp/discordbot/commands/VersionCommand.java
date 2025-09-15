@@ -15,8 +15,8 @@ import static de.rettichlp.discordbot.Application.discordBotProperties;
 @Command(label = "version")
 public class VersionCommand extends CommandBase {
 
-    public VersionCommand(String name) {
-        super(name);
+    public VersionCommand(String label) {
+        super(label);
     }
 
     @Override

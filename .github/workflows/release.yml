@@ -24,74 +24,74 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
 
-      - name: Configure git
-        run: |
-          user_name=$(curl -s 'https://api.github.com/users/${{ github.actor }}' | jq -r '.name')
-          git config --global user.name "$user_name"
-          git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+    - name: Configure git
+      run: |
+        user_name=$(curl -s 'https://api.github.com/users/${{ github.actor }}' | jq -r '.name')
+        git config --global user.name "$user_name"
+        git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
-      - name: Update project version
-        run: mvn versions:set -DnewVersion=${{ inputs.version }}
+    - name: Update project version
+      run: mvn versions:set -DnewVersion=${{ inputs.version }}
 
-      - name: Commit and merge develop branch to main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git commit --all -m "Update version to ${{ inputs.version }}" && git push origin develop
-          git fetch --all
-          git checkout --track origin/main && git pull
-          git merge --no-ff -m "Release ${{ inputs.version }}" develop && git push origin main
+    - name: Commit and merge develop branch to main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git commit --all -m "Update version to ${{ inputs.version }}" && git push origin develop
+        git fetch --all
+        git checkout --track origin/main && git pull
+        git merge --no-ff -m "Release ${{ inputs.version }}" develop && git push origin main
 
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '23'
-          cache: maven
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'temurin'
+        java-version: '23'
+        cache: maven
 
-      - name: Set application properties
-        env:
-          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-        run: |
-          echo "discord.bot.token=$DISCORD_BOT_TOKEN" >> src/main/resources/application.properties
+    - name: Set application properties
+      env:
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      run: |
+        echo "discord.bot.token=$DISCORD_BOT_TOKEN" >> src/main/resources/application.properties
 
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
 
-      - name: Upload application via SCP
-        uses: appleboy/scp-action@v1.0.0
-        with:
-          host: rettichlp.de
-          username: discord-bot
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          source: "target/rettichlp-discord-bot.jar"
-          target: "/home/discord-bot/data"
-          timeout: 120s
-          strip_components: 1
+    - name: Upload application via SCP
+      uses: appleboy/scp-action@v1.0.0
+      with:
+        host: rettichlp.de
+        username: discord-bot
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        source: "target/rettichlp-discord-bot.jar"
+        target: "/home/discord-bot/data"
+        timeout: 120s
+        strip_components: 1
 
-      - name: Restart application
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: rettichlp.de
-          username: discord-bot
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          script: |
-            cd /home/discord-bot/data
-            docker compose up -d --build
+    - name: Restart application
+      uses: appleboy/ssh-action@v1.2.2
+      with:
+        host: rettichlp.de
+        username: discord-bot
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+          cd /home/discord-bot/data
+          docker compose up -d --build
 
-      - name: Create release notes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ inputs.version }}
-        run: |
-          gh release create "$tag" \
-              --target main \
-              --repo="$GITHUB_REPOSITORY" \
-              --title="$tag" \
-              --generate-notes
+    - name: Create release notes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.version }}
+      run: |
+        gh release create "$tag" \
+            --target main \
+            --repo="$GITHUB_REPOSITORY" \
+            --title="$tag" \
+            --generate-notes

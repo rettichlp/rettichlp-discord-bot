@@ -21,6 +21,7 @@ public class Registry {
 
     public Registry() {
         this.scanner = new ClassPathScanningCandidateComponentProvider(false);
+        this.scanner.addIncludeFilter(new AnnotationTypeFilter(Button.class));
         this.scanner.addIncludeFilter(new AnnotationTypeFilter(Command.class));
         this.scanner.addIncludeFilter(new AnnotationTypeFilter(EventListener.class));
     }
@@ -97,5 +98,38 @@ public class Registry {
                 });
 
         log.info("Registered {}/{} event listeners ({} skipped)", successfulRegistrations.get(), listenerClassNames.size(), skippedRegistrations.get());
+    }
+
+    public void registerButtons() {
+        AtomicInteger successfulRegistrations = new AtomicInteger();
+        AtomicInteger skippedRegistrations = new AtomicInteger();
+
+        List<String> buttonClassNames = this.scanner.findCandidateComponents("de.rettichlp.discordbot.buttons").stream()
+                .map(BeanDefinition::getBeanClassName)
+                .toList();
+
+        buttonClassNames.stream()
+                .map(className -> {
+                    try {
+                        return forName(className);
+                    } catch (ClassNotFoundException e) {
+                        log.error("Failed to load button class: {}", className, e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .forEach(buttonClass -> {
+                    Button annotation = buttonClass.getAnnotation(Button.class);
+
+                    try {
+                        ButtonBase buttonInstance = (ButtonBase) buttonClass.getConstructor(String.class).newInstance(annotation.label());
+                        discordBot.addEventListener(buttonInstance);
+                        successfulRegistrations.getAndIncrement();
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                        log.error("Failed to register button: {}", buttonClass.getName(), e);
+                    }
+                });
+
+        log.info("Registered {}/{} button ({} skipped)", successfulRegistrations.get(), buttonClassNames.size(), skippedRegistrations.get());
     }
 }
