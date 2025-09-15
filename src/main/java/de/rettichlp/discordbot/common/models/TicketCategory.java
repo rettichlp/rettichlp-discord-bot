@@ -71,9 +71,9 @@ public enum TicketCategory {
         }
 
         textChannelChannelAction.queue(textChannel -> textChannel
-                    .sendMessage("Hey " + member.getAsMention() + "! Danke, dass du ein " + this.buttonLabel + " erstellt hast. Das Ticket wird schnellstmöglich bearbeitet.\n" +
-                            "Anliegen: " + topic + (nonNull(this.secretaryRole) ? "\n" + this.secretaryRole.getAsMention() : ""))
-                    .addComponents(ActionRow.of(success("btn_ticket_close", "Ticket schließen").withEmoji(fromUnicode("U+1F512"))))
-                    .queue(message -> event.reply("Du hast ein Ticket erstellt: " + message.getJumpUrl()).setEphemeral(true).queue()));
+                .sendMessage("Hey " + member.getAsMention() + "! Danke, dass du ein " + this.buttonLabel + " erstellt hast. Das Ticket wird schnellstmöglich bearbeitet.\n" +
+                        "Anliegen: " + topic + (nonNull(this.secretaryRole) ? "\n" + this.secretaryRole.getAsMention() : ""))
+                .addComponents(ActionRow.of(success("btn_ticket_close", "Ticket schließen").withEmoji(fromUnicode("U+1F512"))))
+                .queue(message -> event.reply("Du hast ein Ticket erstellt: " + message.getJumpUrl()).setEphemeral(true).queue()));
     }
 }
