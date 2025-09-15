@@ -10,15 +10,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 import static de.rettichlp.discordbot.Application.discordBotProperties;
-import static de.rettichlp.discordbot.common.models.TicketCategory.GENERALLY;
+import static de.rettichlp.discordbot.common.models.TicketCategory.RLPTP;
 import static java.util.Objects.requireNonNull;
 
-@Button(label = "btn_ticket_create")
-public class TicketCreateButton extends ButtonBase {
+@Button(label = "btn_ticket_create_rlptp")
+public class TicketCreateRLPTPButton extends ButtonBase {
 
-    private static final TicketCategory TICKET_CATEGORY = GENERALLY;
+    private static final TicketCategory TICKET_CATEGORY = RLPTP;
 
-    public TicketCreateButton(String label) {
+    public TicketCreateRLPTPButton(String label) {
         super(label);
     }
 
