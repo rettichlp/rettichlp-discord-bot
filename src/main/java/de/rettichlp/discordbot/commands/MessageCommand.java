@@ -32,7 +32,7 @@ public class MessageCommand extends CommandBase {
                 EmbedBuilder embedBuilder = new EmbedBuilder()
                         .setColor(new Color(0x609fee))
                         .setTitle("Ticket")
-                        .addField("🎫 **Hier kannst du ein Ticket erstellen um Hilfe zu erhalten oder sonstige Fragen zu klären.**", "Bei der Erstellung eines Tickets wirst du nach deinem Anliegen gefragt. Solltest es bei deinem Anliegen um eine bestimmte Anwendung gehen, wähle diesen Ticket-Typ bitte direkt aus.", false);
+                        .addField("🎫 **Hier kannst du ein Ticket erstellen um Hilfe zu erhalten oder sonstige Fragen zu klären.**", "Bei der Erstellung eines Tickets wirst du nach deinem Anliegen gefragt. Sollte es bei deinem Anliegen um eine bestimmte Anwendung gehen, wähle diesen Ticket-Typ bitte direkt aus.", false);
 
                 textChannel
                         .sendMessageEmbeds(embedBuilder.build())
