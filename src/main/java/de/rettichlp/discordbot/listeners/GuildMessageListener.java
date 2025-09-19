@@ -85,7 +85,7 @@ public class GuildMessageListener extends ListenerAdapter {
     }
 
     private boolean isDisallowedToSendInviteLinks(Member member) {
-        return ofNullable(member)
+        return !ofNullable(member)
                 .map(m -> m.hasPermission(MESSAGE_MANAGE))
                 .orElse(false);
     }
