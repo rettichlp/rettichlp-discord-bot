@@ -75,7 +75,7 @@ jobs:
         strip_components: 1
 
     - name: Restart application
-      uses: appleboy/ssh-action@v1.2.2
+      uses: appleboy/ssh-action@v1.2.5
       with:
         host: rettichlp.de
         username: discord-bot
