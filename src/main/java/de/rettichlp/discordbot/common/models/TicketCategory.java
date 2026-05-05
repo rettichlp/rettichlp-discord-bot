@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.buttons.Button;
+import net.dv8tion.jda.api.components.label.Label;
 import net.dv8tion.jda.api.components.textinput.TextInput;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -48,13 +49,12 @@ public enum TicketCategory {
     @NotNull
     public Modal getTicketModal() {
         TextInput logInput = TextInput.create("tip_topic", PARAGRAPH)
-                .setValue("Anliegen")
                 .setRequired(true)
                 .setPlaceholder("Hey, ich brauche bitte Hilfe bei ...")
                 .build();
 
         return create("mdl_" + this.id, "Neues Ticket")
-                //.addComponents(ActionRowImpl. ActionRow.of(logInput)) TODO
+                .addComponents(Label.of("Anliegen", logInput))
                 .build();
     }
 
