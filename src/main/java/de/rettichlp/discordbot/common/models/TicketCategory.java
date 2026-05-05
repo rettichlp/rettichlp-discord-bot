@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
-import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.modals.Modal;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,7 @@ import static net.dv8tion.jda.api.components.buttons.Button.secondary;
 import static net.dv8tion.jda.api.components.buttons.Button.success;
 import static net.dv8tion.jda.api.components.textinput.TextInputStyle.PARAGRAPH;
 import static net.dv8tion.jda.api.entities.emoji.Emoji.fromUnicode;
-import static net.dv8tion.jda.api.interactions.modals.Modal.create;
+import static net.dv8tion.jda.api.modals.Modal.create;
 
 @Getter
 @AllArgsConstructor
@@ -47,13 +47,14 @@ public enum TicketCategory {
 
     @NotNull
     public Modal getTicketModal() {
-        TextInput logInput = TextInput.create("tip_topic", "Anliegen", PARAGRAPH)
+        TextInput logInput = TextInput.create("tip_topic", PARAGRAPH)
+                .setValue("Anliegen")
                 .setRequired(true)
                 .setPlaceholder("Hey, ich brauche bitte Hilfe bei ...")
                 .build();
 
         return create("mdl_" + this.id, "Neues Ticket")
-                .addComponents(ActionRow.of(logInput))
+                //.addComponents(ActionRowImpl. ActionRow.of(logInput)) TODO
                 .build();
     }
 
