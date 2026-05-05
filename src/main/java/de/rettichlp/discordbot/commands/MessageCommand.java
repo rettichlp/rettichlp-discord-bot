@@ -5,7 +5,6 @@ import de.rettichlp.discordbot.common.registry.Command;
 import de.rettichlp.discordbot.common.registry.CommandBase;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
-import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +37,7 @@ public class MessageCommand extends CommandBase {
                         .sendMessageEmbeds(embedBuilder.build())
                         .addComponents(ActionRow.of(stream(TicketCategory.values())
                                 .map(TicketCategory::getTicketCreateButton)
-                                .toArray(Button[]::new)))
+                                .toList()))
                         .queue();
             }
         }
