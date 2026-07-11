@@ -17,7 +17,6 @@ import static net.dv8tion.jda.api.Permission.MANAGE_CHANNEL;
 import static net.dv8tion.jda.api.Permission.MANAGE_PERMISSIONS;
 import static net.dv8tion.jda.api.Permission.MODERATE_MEMBERS;
 import static net.dv8tion.jda.api.Permission.VIEW_CHANNEL;
-import static net.dv8tion.jda.api.Permission.VOICE_CONNECT;
 import static net.dv8tion.jda.api.Permission.VOICE_MOVE_OTHERS;
 
 @EventListener
@@ -62,7 +61,7 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
 
             Member entity = e.getEntity();
             parentCategory.createVoiceChannel(randomVoiceChannelName())
-                    .addPermissionOverride(guild.getPublicRole(), EnumSet.of(VIEW_CHANNEL), EnumSet.of(VOICE_CONNECT))
+                    .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(VIEW_CHANNEL))
                     .addPermissionOverride(entity, EnumSet.of(MANAGE_CHANNEL, MANAGE_PERMISSIONS, MODERATE_MEMBERS, VOICE_MOVE_OTHERS), null)
                     .queue(voiceChannel -> {
                         guild.moveVoiceMember(entity, voiceChannel).queue();
