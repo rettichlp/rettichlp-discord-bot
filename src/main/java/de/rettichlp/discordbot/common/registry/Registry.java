@@ -5,10 +5,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.RegexPatternTypeFilter;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,9 +24,9 @@ public class Registry {
     public Registry(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         this.scanner = new ClassPathScanningCandidateComponentProvider(false);
-        this.scanner.addIncludeFilter(new AnnotationTypeFilter(Button.class));
         this.scanner.addIncludeFilter(new RegexPatternTypeFilter(compile(".*Command$")));
         this.scanner.addIncludeFilter(new RegexPatternTypeFilter(compile(".*Listener$")));
+        this.scanner.addIncludeFilter(new RegexPatternTypeFilter(compile(".*Button$")));
     }
 
     public void registerCommands() {
@@ -114,15 +112,14 @@ public class Registry {
                 })
                 .filter(Objects::nonNull)
                 .forEach(buttonClass -> {
-                    Button annotation = buttonClass.getAnnotation(Button.class);
-
-                    try {
-                        ButtonBase buttonInstance = (ButtonBase) buttonClass.getConstructor(String.class).newInstance(annotation.label());
-                        discordBot.addEventListener(buttonInstance);
-                        successfulRegistrations.getAndIncrement();
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                        log.error("Failed to register button: {}", buttonClass.getName(), e);
+                    if (buttonClass.isAnnotationPresent(Ignore.class)) {
+                        skippedRegistrations.getAndIncrement();
+                        return;
                     }
+
+                    ButtonBase buttonInstance = (ButtonBase) applicationContext.getBean(buttonClass);
+                    discordBot.addEventListener(buttonInstance);
+                    successfulRegistrations.getAndIncrement();
                 });
 
         log.info("Registered {}/{} button ({} skipped)", successfulRegistrations.get(), buttonClassNames.size(), skippedRegistrations.get());

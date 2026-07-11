@@ -10,9 +10,10 @@ import net.dv8tion.jda.api.components.textdisplay.TextDisplay;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
-import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
@@ -22,6 +23,7 @@ import java.util.TimerTask;
 
 import static de.rettichlp.discordbot.Application.discordBotProperties;
 import static java.util.Arrays.stream;
+import static java.util.Optional.ofNullable;
 import static net.dv8tion.jda.api.Permission.VIEW_CHANNEL;
 import static net.dv8tion.jda.api.components.buttons.Button.primary;
 import static net.dv8tion.jda.api.components.buttons.Button.success;
@@ -47,7 +49,7 @@ public class TicketService {
         }, 5000);
     }
 
-    public void createTicket(@NonNull StringSelectInteractionEvent event, TicketCategory ticketCategory) {
+    public void createTicket(@NonNull GenericComponentInteractionCreateEvent event, @Nullable TicketCategory ticketCategory) {
         Member member = event.getMember();
         assert member != null;
 
@@ -73,25 +75,9 @@ public class TicketService {
 
         textChannelChannelAction.queue(textChannel -> textChannel
                 .sendMessage("Hey " + member.getAsMention() + "! Danke, dass du ein Ticket erstellt hast. Das Ticket wird schnellstmöglich bearbeitet.\n" +
-                        "Anliegen: " + "topic" /*+ (nonNull(this.secretaryRole) ? "\n" + this.secretaryRole.getAsMention() : "")*/)
+                        "Kategorie: " + ofNullable(ticketCategory).map(TicketCategory::getLabel).orElse("Ohne"))
                 .addComponents(ActionRow.of(success("btn_ticket_close", "Ticket schließen").withEmoji(fromUnicode("U+1F512"))))
                 .queue(message -> event.reply("Du hast ein Ticket erstellt: " + message.getJumpUrl()).setEphemeral(true).queue()));
-    }
-
-    private void updateTicketCreateMessage() {
-        TextChannel ticketChannel = discordBotProperties.getGuild().getTextChannelById(TICKET_CHANNEL_ID);
-
-        if (ticketChannel == null) {
-            log.warn("Ticket channel not found! Skipping update of ticket create message.");
-            return;
-        }
-
-        ticketChannel.retrieveMessageById(TICKET_MESSAGE_ID).queue(message -> {
-            MessageTopLevelComponent ticketCreateMessage = getTicketCreateMessage();
-            message.editMessageComponents(ticketCreateMessage)
-                    .useComponentsV2()
-                    .queue();
-        });
     }
 
     public @NonNull MessageTopLevelComponent getTicketCreateMessage() {
@@ -116,5 +102,21 @@ public class TicketService {
                         .map(TicketCategory::getSelectOption)
                         .toList())
                 .build();
+    }
+
+    private void updateTicketCreateMessage() {
+        TextChannel ticketChannel = discordBotProperties.getGuild().getTextChannelById(TICKET_CHANNEL_ID);
+
+        if (ticketChannel == null) {
+            log.warn("Ticket channel not found! Skipping update of ticket create message.");
+            return;
+        }
+
+        ticketChannel.retrieveMessageById(TICKET_MESSAGE_ID).queue(message -> {
+            MessageTopLevelComponent ticketCreateMessage = getTicketCreateMessage();
+            message.editMessageComponents(ticketCreateMessage)
+                    .useComponentsV2()
+                    .queue();
+        });
     }
 }
