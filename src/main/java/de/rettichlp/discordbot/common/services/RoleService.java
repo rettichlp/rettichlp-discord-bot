@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -49,22 +50,24 @@ public class RoleService {
 
     @Scheduled(cron = "0 0 */6 * * *", zone = "Europe/Berlin") // every day at 0:00, 6:00, 12:00, 18:00 (UTC+1)
     public void syncUserRoles() {
-        log.info("Discord role synchronising: started");
+        log.info("Discord role synchronization: started");
 
-        ofNullable(discordBotProperties.getGuild()).ifPresentOrElse(guild -> {
-            guild.loadMembers(member -> {
-                if (member.getUser().isBot()) {
-                    return;
+        ofNullable(discordBotProperties.getGuild()).ifPresentOrElse(guild -> guild.loadMembers(member -> {
+            if (member.getUser().isBot()) {
+                return;
+            }
+
+            getRolesMemberShouldHave(member).forEach(role -> {
+                if (!member.getRoles().contains(role)) {
+                    guild.addRoleToMember(member, role).queue(_ -> {
+                        log.info("Discord role synchronization: Add role {} to member {}", role.getName(), member.getEffectiveName());
+                    });
                 }
-
-                getRolesMemberShouldHave(member).forEach(role -> guild.addRoleToMember(member, role).queue(_ -> {
-                    log.info("Discord role synchronising: Add role {} to member {}", role.getName(), member.getEffectiveName());
-                }));
             });
-        }, () -> log.warn("Discord role synchronising: Skipped! Guild is null"));
+        }), () -> log.warn("Discord role synchronization: Skipped! Guild is null"));
     }
 
-    private List<Role> getRolesMemberShouldHave(@NotNull Member member) {
+    private @NonNull List<Role> getRolesMemberShouldHave(@NotNull Member member) {
         Duration durationSinceJoin = between(member.getTimeJoined().toInstant(), now());
         return ROLE_DURATIONS.entrySet().stream()
                 .filter(stringDurationEntry -> stringDurationEntry.getValue().compareTo(durationSinceJoin) <= 0)
