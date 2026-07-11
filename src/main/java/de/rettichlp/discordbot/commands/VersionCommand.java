@@ -1,6 +1,5 @@
 package de.rettichlp.discordbot.commands;
 
-import de.rettichlp.discordbot.common.registry.Command;
 import de.rettichlp.discordbot.common.registry.CommandBase;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -8,15 +7,16 @@ import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
 import static de.rettichlp.discordbot.Application.discordBot;
 import static de.rettichlp.discordbot.Application.discordBotProperties;
 
-@Command(label = "version")
+@Component
 public class VersionCommand extends CommandBase {
 
-    public VersionCommand(String label) {
-        super(label);
+    public VersionCommand() {
+        super("version");
     }
 
     @Override

@@ -3,27 +3,30 @@ package de.rettichlp.discordbot.common.registry;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.core.type.filter.RegexPatternTypeFilter;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.rettichlp.discordbot.Application.discordBot;
 import static java.lang.Class.forName;
+import static java.util.regex.Pattern.compile;
 
 @Log4j2
 public class Registry {
 
+    private final ApplicationContext applicationContext;
     private final ClassPathScanningCandidateComponentProvider scanner;
 
-    public Registry() {
+    public Registry(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
         this.scanner = new ClassPathScanningCandidateComponentProvider(false);
-        this.scanner.addIncludeFilter(new AnnotationTypeFilter(Button.class));
-        this.scanner.addIncludeFilter(new AnnotationTypeFilter(Command.class));
-        this.scanner.addIncludeFilter(new AnnotationTypeFilter(EventListener.class));
+        this.scanner.addIncludeFilter(new RegexPatternTypeFilter(compile(".*Command$")));
+        this.scanner.addIncludeFilter(new RegexPatternTypeFilter(compile(".*Listener$")));
+        this.scanner.addIncludeFilter(new RegexPatternTypeFilter(compile(".*Button$")));
     }
 
     public void registerCommands() {
@@ -45,19 +48,14 @@ public class Registry {
                 })
                 .filter(Objects::nonNull)
                 .forEach(commandClass -> {
-                    Command annotation = commandClass.getAnnotation(Command.class);
-                    if (annotation.skipped()) {
+                    if (commandClass.isAnnotationPresent(Ignore.class)) {
                         skippedRegistrations.getAndIncrement();
                         return;
                     }
 
-                    try {
-                        CommandBase commandInstance = (CommandBase) commandClass.getConstructor(String.class).newInstance(annotation.label());
-                        discordBot.addEventListener(commandInstance);
-                        successfulRegistrations.getAndIncrement();
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                        log.error("Failed to register command: {}", commandClass.getName(), e);
-                    }
+                    CommandBase commandInstance = (CommandBase) applicationContext.getBean(commandClass);
+                    discordBot.addEventListener(commandInstance);
+                    successfulRegistrations.getAndIncrement();
                 });
 
         log.info("Registered {}/{} commands ({} skipped)", successfulRegistrations.get(), commandClassNames.size(), skippedRegistrations.get());
@@ -82,19 +80,14 @@ public class Registry {
                 })
                 .filter(Objects::nonNull)
                 .forEach(listenerClass -> {
-                    EventListener annotation = listenerClass.getAnnotation(EventListener.class);
-                    if (annotation.skipped()) {
+                    if (listenerClass.isAnnotationPresent(Ignore.class)) {
                         skippedRegistrations.getAndIncrement();
                         return;
                     }
 
-                    try {
-                        ListenerAdapter listenerInstance = (ListenerAdapter) listenerClass.getConstructor().newInstance();
-                        discordBot.addEventListener(listenerInstance);
-                        successfulRegistrations.getAndIncrement();
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                        log.error("Failed to register listener: {}", listenerClass.getName(), e);
-                    }
+                    ListenerAdapter listenerInstance = (ListenerAdapter) applicationContext.getBean(listenerClass);
+                    discordBot.addEventListener(listenerInstance);
+                    successfulRegistrations.getAndIncrement();
                 });
 
         log.info("Registered {}/{} event listeners ({} skipped)", successfulRegistrations.get(), listenerClassNames.size(), skippedRegistrations.get());
@@ -119,15 +112,14 @@ public class Registry {
                 })
                 .filter(Objects::nonNull)
                 .forEach(buttonClass -> {
-                    Button annotation = buttonClass.getAnnotation(Button.class);
-
-                    try {
-                        ButtonBase buttonInstance = (ButtonBase) buttonClass.getConstructor(String.class).newInstance(annotation.label());
-                        discordBot.addEventListener(buttonInstance);
-                        successfulRegistrations.getAndIncrement();
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                        log.error("Failed to register button: {}", buttonClass.getName(), e);
+                    if (buttonClass.isAnnotationPresent(Ignore.class)) {
+                        skippedRegistrations.getAndIncrement();
+                        return;
                     }
+
+                    ButtonBase buttonInstance = (ButtonBase) applicationContext.getBean(buttonClass);
+                    discordBot.addEventListener(buttonInstance);
+                    successfulRegistrations.getAndIncrement();
                 });
 
         log.info("Registered {}/{} button ({} skipped)", successfulRegistrations.get(), buttonClassNames.size(), skippedRegistrations.get());

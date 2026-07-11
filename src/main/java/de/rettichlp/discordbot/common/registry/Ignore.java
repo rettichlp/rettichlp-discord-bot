@@ -8,9 +8,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface Command {
+public @interface Ignore {
 
-    String label();
-
-    boolean skipped() default false;
 }

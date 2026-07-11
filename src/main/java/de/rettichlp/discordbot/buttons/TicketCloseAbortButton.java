@@ -1,15 +1,15 @@
 package de.rettichlp.discordbot.buttons;
 
-import de.rettichlp.discordbot.common.registry.Button;
 import de.rettichlp.discordbot.common.registry.ButtonBase;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
-@Button(label = "btn_ticket_close_abort")
+@Component
 public class TicketCloseAbortButton extends ButtonBase {
 
-    public TicketCloseAbortButton(String label) {
-        super(label);
+    public TicketCloseAbortButton() {
+        super("btn_ticket_close_abort");
     }
 
     @Override

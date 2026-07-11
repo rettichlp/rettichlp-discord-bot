@@ -1,17 +1,17 @@
 package de.rettichlp.discordbot.buttons;
 
-import de.rettichlp.discordbot.common.registry.Button;
 import de.rettichlp.discordbot.common.registry.ButtonBase;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
 import static de.rettichlp.discordbot.Application.discordBotProperties;
 
-@Button(label = "btn_ticket_close_confirm")
+@Component
 public class TicketCloseConfirmButton extends ButtonBase {
 
-    public TicketCloseConfirmButton(String label) {
-        super(label);
+    public TicketCloseConfirmButton() {
+        super("btn_ticket_close_confirm");
     }
 
     @Override

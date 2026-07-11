@@ -1,24 +1,24 @@
 package de.rettichlp.discordbot.commands;
 
-import de.rettichlp.discordbot.common.models.TicketCategory;
-import de.rettichlp.discordbot.common.registry.Command;
 import de.rettichlp.discordbot.common.registry.CommandBase;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import de.rettichlp.discordbot.common.services.TicketService;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.awt.Color;
-
-import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 
-@Command(label = "nachricht")
+@Component
 public class MessageCommand extends CommandBase {
 
-    public MessageCommand(String label) {
-        super(label);
+    private final TicketService ticketService;
+
+    @Autowired
+    public MessageCommand(TicketService ticketService) {
+        super("nachricht");
+        this.ticketService = ticketService;
     }
 
     @Override
@@ -27,19 +27,9 @@ public class MessageCommand extends CommandBase {
 
         TextChannel textChannel = event.getChannel().asTextChannel();
         switch (requireNonNull(event.getSubcommandName())) {
-            case "ticket" -> {
-                EmbedBuilder embedBuilder = new EmbedBuilder()
-                        .setColor(new Color(0x609fee))
-                        .setTitle("Ticket")
-                        .addField("🎫 **Hier kannst du ein Ticket erstellen um Hilfe zu erhalten oder sonstige Fragen zu klären.**", "Bei der Erstellung eines Tickets wirst du nach deinem Anliegen gefragt. Sollte es bei deinem Anliegen um eine bestimmte Anwendung gehen, wähle diesen Ticket-Typ bitte direkt aus.", false);
-
-                textChannel
-                        .sendMessageEmbeds(embedBuilder.build())
-                        .addComponents(ActionRow.of(stream(TicketCategory.values())
-                                .map(TicketCategory::getTicketCreateButton)
-                                .toList()))
-                        .queue();
-            }
+            case "ticket" -> textChannel.sendMessageComponents(this.ticketService.getTicketCreateMessage())
+                    .useComponentsV2()
+                    .queue();
         }
 
         event.getHook().deleteOriginal().queue();

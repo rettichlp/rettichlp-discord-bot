@@ -1,11 +1,11 @@
 package de.rettichlp.discordbot.buttons;
 
-import de.rettichlp.discordbot.common.registry.Button;
 import de.rettichlp.discordbot.common.registry.ButtonBase;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
@@ -13,11 +13,11 @@ import static de.rettichlp.discordbot.Application.discordBotProperties;
 import static net.dv8tion.jda.api.components.buttons.Button.danger;
 import static net.dv8tion.jda.api.components.buttons.Button.secondary;
 
-@Button(label = "btn_ticket_close")
+@Component
 public class TicketCloseButton extends ButtonBase {
 
-    public TicketCloseButton(String label) {
-        super(label);
+    public TicketCloseButton() {
+        super("btn_ticket_close");
     }
 
     @Override

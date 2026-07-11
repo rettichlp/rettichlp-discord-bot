@@ -1,41 +1,24 @@
 package de.rettichlp.discordbot.buttons;
 
-import de.rettichlp.discordbot.common.models.TicketCategory;
-import de.rettichlp.discordbot.common.registry.Button;
 import de.rettichlp.discordbot.common.registry.ButtonBase;
-import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
+import de.rettichlp.discordbot.common.services.TicketService;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
-import static de.rettichlp.discordbot.Application.discordBotProperties;
-import static de.rettichlp.discordbot.common.models.TicketCategory.GENERALLY;
-import static java.util.Objects.requireNonNull;
-
-@Button(label = "btn_ticket_create")
+@Component
 public class TicketCreateButton extends ButtonBase {
 
-    private static final TicketCategory TICKET_CATEGORY = GENERALLY;
+    private final TicketService ticketService;
 
-    public TicketCreateButton(String label) {
-        super(label);
+    @Autowired
+    public TicketCreateButton(TicketService ticketService) {
+        super("btn_ticket_create");
+        this.ticketService = ticketService;
     }
 
     @Override
-    public void onButtonClick(@NotNull ButtonInteractionEvent event) {
-        boolean hasTicketChannel = discordBotProperties.getTicketCategory().getChannels().stream()
-                .map(guildChannel -> discordBotProperties.getGuild().getTextChannelById(guildChannel.getId()))
-                .filter(Objects::nonNull)
-                .map(StandardGuildMessageChannel::getTopic)
-                .filter(Objects::nonNull)
-                .anyMatch(s -> s.contains(TICKET_CATEGORY.getButtonLabel()) && s.contains(requireNonNull(event.getMember()).getId()));
-
-        if (hasTicketChannel) {
-            event.reply("Du hast bereits einen " + TICKET_CATEGORY.getButtonLabel() + " Channel!").setEphemeral(true).queue();
-            return;
-        }
-
-        event.replyModal(TICKET_CATEGORY.getTicketModal()).queue();
+    public void onButtonClick(ButtonInteractionEvent event) {
+        ticketService.createTicket(event, null);
     }
 }
