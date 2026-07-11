@@ -1,12 +1,12 @@
 package de.rettichlp.discordbot.listeners;
 
-import de.rettichlp.discordbot.common.registry.EventListener;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.stereotype.Component;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -19,7 +19,7 @@ import static net.dv8tion.jda.api.Permission.MODERATE_MEMBERS;
 import static net.dv8tion.jda.api.Permission.VIEW_CHANNEL;
 import static net.dv8tion.jda.api.Permission.VOICE_MOVE_OTHERS;
 
-@EventListener
+@Component
 public class GuildVoiceUpdateListener extends ListenerAdapter {
 
     private static final String TEMPORARY_VOICE_CHANNEL_CATEGORY_ID = "1415968694743597119";

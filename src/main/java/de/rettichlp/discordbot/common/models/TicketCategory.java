@@ -26,4 +26,14 @@ public enum TicketCategory {
                 .withDescription(this.description)
                 .withEmoji(this.emoji);
     }
+
+    public static TicketCategory fromValue(String value) {
+        for (TicketCategory category : TicketCategory.values()) {
+            if (category.getValue().equals(value)) {
+                return category;
+            }
+        }
+
+        throw new IllegalArgumentException("No enum constant with value " + value);
+    }
 }

@@ -1,12 +1,12 @@
 package de.rettichlp.discordbot.listeners;
 
-import de.rettichlp.discordbot.common.registry.EventListener;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -17,7 +17,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.regex.Pattern.compile;
 import static net.dv8tion.jda.api.Permission.MESSAGE_MANAGE;
 
-@EventListener
+@Component
 public class GuildMessageListener extends ListenerAdapter {
 
     private static final Pattern INVITE_LINK_PATTERN = compile("(https?://)?(www\\.)?discord\\.(gg|io|me|li|com)/(invite/\\w+|\\w+)");

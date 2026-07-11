@@ -37,14 +37,14 @@ public class Application {
 
         long discordBotStartTime = currentTimeMillis();
         log.info("Discord bot starting");
-        startDiscordBot();
+        startDiscordBot(context);
 
         getRuntime().addShutdownHook(new Thread(() -> ofNullable(discordBot).ifPresent(JDA::shutdown)));
 
         log.info("Discord bot started in {}ms", currentTimeMillis() - discordBotStartTime);
     }
 
-    private static void startDiscordBot() throws InterruptedException {
+    private static void startDiscordBot(ConfigurableApplicationContext context) throws InterruptedException {
         discordBot = JDABuilder
                 .createDefault(discordBotProperties.getToken())
                 .disableCache(MEMBER_OVERRIDES) // Disable parts of the cache
@@ -56,7 +56,7 @@ public class Application {
                 .enableIntents(GUILD_VOICE_STATES)
                 .build().awaitReady();
 
-        Registry registry = new Registry();
+        Registry registry = new Registry(context);
         registry.registerCommands();
         registry.registerListeners();
         registry.registerButtons();
