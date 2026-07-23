@@ -33,7 +33,7 @@ public class Registry {
         AtomicInteger successfulRegistrations = new AtomicInteger();
         AtomicInteger skippedRegistrations = new AtomicInteger();
 
-        List<String> commandClassNames = this.scanner.findCandidateComponents("de.rettichlp.discordbot.commands").stream()
+        List<String> commandClassNames = this.scanner.findCandidateComponents("de.rettichlp.therettingtongardener.commands").stream()
                 .map(BeanDefinition::getBeanClassName)
                 .toList();
 
@@ -65,7 +65,7 @@ public class Registry {
         AtomicInteger successfulRegistrations = new AtomicInteger();
         AtomicInteger skippedRegistrations = new AtomicInteger();
 
-        List<String> listenerClassNames = this.scanner.findCandidateComponents("de.rettichlp.discordbot.listeners").stream()
+        List<String> listenerClassNames = this.scanner.findCandidateComponents("de.rettichlp.therettingtongardener.listeners").stream()
                 .map(BeanDefinition::getBeanClassName)
                 .toList();
 
@@ -97,7 +97,7 @@ public class Registry {
         AtomicInteger successfulRegistrations = new AtomicInteger();
         AtomicInteger skippedRegistrations = new AtomicInteger();
 
-        List<String> buttonClassNames = this.scanner.findCandidateComponents("de.rettichlp.discordbot.buttons").stream()
+        List<String> buttonClassNames = this.scanner.findCandidateComponents("de.rettichlp.therettingtongardener.buttons").stream()
                 .map(BeanDefinition::getBeanClassName)
                 .toList();
 
