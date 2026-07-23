@@ -19,19 +19,19 @@ RUN mvn -B clean package -DskipTests
 FROM eclipse-temurin:25
 
 # Non-root user for better security (the Java process shouldn't run as root)
-RUN useradd --create-home --shell /bin/bash rettichlp-discord-bot
+RUN useradd --create-home --shell /bin/bash the-rettington-gardener
 
 # Working directory
 WORKDIR /workspace
 
 # Copy the built jar from the build stage
 # Adjust the filename if your <finalName> in pom.xml is different
-COPY --from=build /build/target/rettichlp-discord-bot.jar /workspace/rettichlp-discord-bot.jar
+COPY --from=build /build/target/the-rettington-gardener.jar /workspace/the-rettington-gardener.jar
 
 # Fix ownership so the non-root user can execute the file
-RUN chown -R rettichlp-discord-bot:rettichlp-discord-bot /workspace
+RUN chown -R the-rettington-gardener:the-rettington-gardener /workspace
 
 # Switch to the non-root user
-USER rettichlp-discord-bot
+USER the-rettington-gardener
 
-CMD ["java", "-jar", "rettichlp-discord-bot.jar"]
+CMD ["java", "-jar", "the-rettington-gardener.jar"]

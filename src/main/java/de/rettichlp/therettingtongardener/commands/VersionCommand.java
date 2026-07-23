@@ -26,8 +26,8 @@ public class VersionCommand extends CommandBase {
 
         MessageEmbed messageEmbed = new EmbedBuilder()
                 .setTitle("Discord Bot by " + user.getEffectiveName(), "https://i.redd.it/gc2m1tdq22w81.jpg")
-                .addField("Version", discordBotProperties.getVersion() + " [Changelog ↗](https://github.com/rettichlp/rettichlp-discord-bot/releases/latest)", false)
-                .addField("GitHub", "https://github.com/rettichlp/rettichlp-discord-bot", false)
+                .addField("Version", discordBotProperties.getVersion() + " [Changelog ↗](https://github.com/rettichlp/the-rettington-gardener/releases/latest)", false)
+                .addField("GitHub", "https://github.com/rettichlp/the-rettington-gardener", false)
                 .setAuthor(botUser.getName(), null, botUser.getAvatarUrl())
                 .build();
 

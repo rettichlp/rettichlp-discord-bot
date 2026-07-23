@@ -11,11 +11,11 @@
     </parent>
 
     <groupId>de.rettichlp</groupId>
-    <artifactId>discordbot</artifactId>
+    <artifactId>therettingtongardener</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>RettichLP Discord Bot</name>
+    <name>The Rettington Gardener</name>
     <description>Discord application from RettichLP</description>
 
     <properties>
@@ -67,7 +67,7 @@
     </dependencies>
 
     <build>
-        <finalName>rettichlp-discord-bot</finalName>
+        <finalName>the-rettington-gardener</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
