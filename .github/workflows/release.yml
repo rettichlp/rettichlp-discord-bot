@@ -20,7 +20,7 @@ permissions:
 jobs:
   release:
 
-    name: 🎉 Release Discord Bot
+    name: 🎉 Release
     runs-on: ubuntu-latest
 
     steps:
