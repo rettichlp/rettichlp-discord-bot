@@ -1,13 +1,13 @@
-package de.rettichlp.discordbot.listeners;
+package de.rettichlp.therettingtongardener.listeners;
 
-import de.rettichlp.discordbot.common.services.TicketService;
+import de.rettichlp.therettingtongardener.common.services.TicketService;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static de.rettichlp.discordbot.common.models.TicketCategory.fromValue;
+import static de.rettichlp.therettingtongardener.common.models.TicketCategory.fromValue;
 
 @Component
 public class StringModalInteractionListener extends ListenerAdapter {

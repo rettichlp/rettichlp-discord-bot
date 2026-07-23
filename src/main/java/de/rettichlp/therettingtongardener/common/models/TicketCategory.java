@@ -1,4 +1,4 @@
-package de.rettichlp.discordbot.common.models;
+package de.rettichlp.therettingtongardener.common.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

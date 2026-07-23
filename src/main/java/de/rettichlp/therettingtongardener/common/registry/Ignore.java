@@ -1,4 +1,4 @@
-package de.rettichlp.discordbot.common.registry;
+package de.rettichlp.therettingtongardener.common.registry;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

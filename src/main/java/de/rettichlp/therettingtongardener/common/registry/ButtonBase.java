@@ -1,4 +1,4 @@
-package de.rettichlp.discordbot.common.registry;
+package de.rettichlp.therettingtongardener.common.registry;
 
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
