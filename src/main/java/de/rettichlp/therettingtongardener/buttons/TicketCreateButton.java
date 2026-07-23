@@ -1,7 +1,7 @@
-package de.rettichlp.discordbot.buttons;
+package de.rettichlp.therettingtongardener.buttons;
 
-import de.rettichlp.discordbot.common.registry.ButtonBase;
-import de.rettichlp.discordbot.common.services.TicketService;
+import de.rettichlp.therettingtongardener.common.registry.ButtonBase;
+import de.rettichlp.therettingtongardener.common.services.TicketService;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

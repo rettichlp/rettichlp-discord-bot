@@ -1,4 +1,4 @@
-package de.rettichlp.discordbot.listeners;
+package de.rettichlp.therettingtongardener.listeners;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;

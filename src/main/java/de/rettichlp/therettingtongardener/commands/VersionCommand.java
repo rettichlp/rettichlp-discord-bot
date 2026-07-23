@@ -1,6 +1,6 @@
-package de.rettichlp.discordbot.commands;
+package de.rettichlp.therettingtongardener.commands;
 
-import de.rettichlp.discordbot.common.registry.CommandBase;
+import de.rettichlp.therettingtongardener.common.registry.CommandBase;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import static de.rettichlp.discordbot.Application.discordBot;
-import static de.rettichlp.discordbot.Application.discordBotProperties;
+import static de.rettichlp.therettingtongardener.Application.discordBot;
+import static de.rettichlp.therettingtongardener.Application.discordBotProperties;
 
 @Component
 public class VersionCommand extends CommandBase {

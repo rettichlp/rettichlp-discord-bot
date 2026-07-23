@@ -1,7 +1,7 @@
-package de.rettichlp.discordbot.commands;
+package de.rettichlp.therettingtongardener.commands;
 
-import de.rettichlp.discordbot.common.registry.CommandBase;
-import de.rettichlp.discordbot.common.services.TicketService;
+import de.rettichlp.therettingtongardener.common.registry.CommandBase;
+import de.rettichlp.therettingtongardener.common.services.TicketService;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;

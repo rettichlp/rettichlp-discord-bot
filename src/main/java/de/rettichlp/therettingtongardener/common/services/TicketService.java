@@ -1,6 +1,6 @@
-package de.rettichlp.discordbot.common.services;
+package de.rettichlp.therettingtongardener.common.services;
 
-import de.rettichlp.discordbot.common.models.TicketCategory;
+import de.rettichlp.therettingtongardener.common.models.TicketCategory;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.components.MessageTopLevelComponent;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static de.rettichlp.discordbot.Application.discordBotProperties;
+import static de.rettichlp.therettingtongardener.Application.discordBotProperties;
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 import static net.dv8tion.jda.api.Permission.VIEW_CHANNEL;

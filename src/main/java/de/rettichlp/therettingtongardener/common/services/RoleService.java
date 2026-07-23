@@ -1,4 +1,4 @@
-package de.rettichlp.discordbot.common.services;
+package de.rettichlp.therettingtongardener.common.services;
 
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.entities.Member;
@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static de.rettichlp.discordbot.Application.discordBotProperties;
+import static de.rettichlp.therettingtongardener.Application.discordBotProperties;
 import static java.time.Duration.ZERO;
 import static java.time.Duration.between;
 import static java.time.Duration.ofDays;

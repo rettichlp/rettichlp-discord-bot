@@ -1,11 +1,11 @@
-package de.rettichlp.discordbot.buttons;
+package de.rettichlp.therettingtongardener.buttons;
 
-import de.rettichlp.discordbot.common.registry.ButtonBase;
+import de.rettichlp.therettingtongardener.common.registry.ButtonBase;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import static de.rettichlp.discordbot.Application.discordBotProperties;
+import static de.rettichlp.therettingtongardener.Application.discordBotProperties;
 
 @Component
 public class TicketCloseConfirmButton extends ButtonBase {

@@ -1,4 +1,4 @@
-package de.rettichlp.discordbot.common.registry;
+package de.rettichlp.therettingtongardener.common.registry;
 
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.rettichlp.discordbot.Application.discordBot;
+import static de.rettichlp.therettingtongardener.Application.discordBot;
 import static java.lang.Class.forName;
 import static java.util.regex.Pattern.compile;
 

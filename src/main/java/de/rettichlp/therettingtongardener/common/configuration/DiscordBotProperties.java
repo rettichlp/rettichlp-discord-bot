@@ -1,4 +1,4 @@
-package de.rettichlp.discordbot.common.configuration;
+package de.rettichlp.therettingtongardener.common.configuration;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import static de.rettichlp.discordbot.Application.discordBot;
+import static de.rettichlp.therettingtongardener.Application.discordBot;
 import static java.util.Objects.isNull;
 
 @Getter
