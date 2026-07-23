@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [ "main", "develop" ]
+  push:
+    branches: [ "develop" ]
+
+run-name: Build+${{ github.run_number }} ${{ github.ref_name }}/${{ github.sha }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+
+    name: 🏗️ Build Discord Bot
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'temurin'
+        java-version: '25'
+        cache: maven
+
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
