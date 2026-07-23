@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
 
-    name: 🏗️ Build Discord Bot
+    name: 🏗️ Build
     runs-on: ubuntu-latest
 
     steps:
